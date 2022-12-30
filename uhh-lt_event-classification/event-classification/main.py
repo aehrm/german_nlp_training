@@ -14,7 +14,7 @@ from torch.optim import SGD
 from torch.optim.lr_scheduler import LambdaLR
 from torch.utils.data import DataLoader, Dataset, random_split
 from tqdm import tqdm
-from transformers import ElectraForSequenceClassification, ElectraTokenizer
+from transformers import BertForSequenceClassification, BertTokenizer
 
 import event_classify.datasets
 from event_classify.config import Config, DatasetConfig, DatasetKind
@@ -25,7 +25,7 @@ from event_classify.datasets import (
 )
 from event_classify.eval import evaluate
 from event_classify.label_smoothing import LabelSmoothingLoss
-from event_classify.model import ElectraForEventClassification
+from event_classify.model import BertForEventClassification
 
 
 def add_special_tokens(model, tokenizer):
@@ -165,7 +165,7 @@ def get_datasets(config: DatasetConfig) -> tuple[Dataset]:
 
 
 def build_loaders(
-    tokenizer: ElectraTokenizer, datasets: List[Dataset], config: Config
+    tokenizer: BertTokenizer, datasets: List[Dataset], config: Config
 ) -> Iterator[DataLoader]:
     for ds in datasets:
         if ds:
@@ -198,11 +198,11 @@ def main(config: Config):
 
 
 def _main(config: Config):
-    tokenizer: ElectraTokenizer = ElectraTokenizer.from_pretrained(
+    tokenizer: BertTokenizer = BertTokenizer.from_pretrained(
         config.pretrained_model,
     )
     tokenizer.save_pretrained("tokenizer")
-    model = ElectraForEventClassification.from_pretrained(
+    model = BertForEventClassification.from_pretrained(
         config.pretrained_model,
         event_config=config,
     )
@@ -217,7 +217,7 @@ def _main(config: Config):
     )
     train(train_loader, dev_loader, model, config)
     if dev_loader is not None:
-        model = ElectraForEventClassification.from_pretrained(
+        model = BertForEventClassification.from_pretrained(
             "best-model",
             event_config=config,
         )

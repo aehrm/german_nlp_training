@@ -3,7 +3,7 @@ import os
 from typing import List, NamedTuple, Optional
 
 from omegaconf import OmegaConf
-from transformers import ElectraTokenizer
+from transformers import BertTokenizer
 
 
 def get_config(hydra_path):
@@ -16,16 +16,16 @@ def get_config(hydra_path):
 
 def get_model(model_path: str, config: Optional[OmegaConf] = None):
     from .datasets import EventType
-    from .model import ElectraForEventClassification
+    from .model import BertForEventClassification
 
     if config is None:
         event_config = get_config(os.path.join(model_path, ".hydra"))
     else:
         event_config = config
-    tokenizer: ElectraTokenizer = ElectraTokenizer.from_pretrained(
+    tokenizer: BertTokenizer = BertTokenizer.from_pretrained(
         os.path.join(model_path, "tokenizer")
     )
-    model = ElectraForEventClassification.from_pretrained(
+    model = BertForEventClassification.from_pretrained(
         os.path.join(model_path, "best-model"),
         num_labels=4,
         event_config=event_config,

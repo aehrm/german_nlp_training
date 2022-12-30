@@ -4,7 +4,7 @@ from typing import Optional
 import mlflow
 import torch
 from torch import nn
-from transformers import ElectraModel, ElectraPreTrainedModel, ElectraTokenizer
+from transformers import BertModel, BertPreTrainedModel, BertTokenizer
 
 from event_classify.config import Config, Output
 from event_classify.datasets import EventClassificationLabels
@@ -64,7 +64,7 @@ class ClassificationHead(nn.Module):
         return x
 
 
-class ElectraForEventClassification(ElectraPreTrainedModel):
+class BertForEventClassification(BertPreTrainedModel):
     def __init__(self, config, event_config: Config):
         super().__init__(config)
         self.event_config = event_config
@@ -73,7 +73,7 @@ class ElectraForEventClassification(ElectraPreTrainedModel):
         else:
             self.event_type_critereon = nn.CrossEntropyLoss(weight=EVENT_CLASS_WEIGHTS)
         self.property_loss = nn.CrossEntropyLoss()
-        self.electra = ElectraModel(config)
+        self.bert = BertModel(config)
         self.config = config
         self.event_type = ClassificationHead(
             config, num_labels=EVENT_PROPERTIES["categories"]
@@ -135,7 +135,7 @@ class ElectraForEventClassification(ElectraPreTrainedModel):
         output_attentions=None,
         output_hidden_states=None,
     ):
-        discriminator_hidden_states = self.electra(
+        discriminator_hidden_states = self.bert(
             input_ids,
             attention_mask,
             token_type_ids,
