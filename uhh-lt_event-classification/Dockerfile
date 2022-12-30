@@ -28,13 +28,15 @@ RUN curl -sSL https://install.python-poetry.org | python3.10 -
 ENV PATH="${PATH}:/root/.local/bin"
 
 
-COPY event-classification event-classification
 WORKDIR /event-classification
+COPY event-classification/poetry.lock poetry.lock
+COPY event-classification/pyproject.toml pyproject.toml
+COPY event-classification/download.sh download.sh
+
 RUN bash ./download.sh
-
-
 RUN poetry install
 RUN poetry add https://github.com/cupy/cupy/releases/download/v10.6.0/cupy_cuda113-10.6.0-cp310-cp310-manylinux1_x86_64.whl
 
-ENTRYPOINT ["poetry", "run"]
+COPY event-classification/**/* ./
 
+ENTRYPOINT ["poetry", "run"]
