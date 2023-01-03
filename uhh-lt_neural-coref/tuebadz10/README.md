@@ -1,0 +1,1 @@
+Place the TüBa-D/Z version 10 file `tuebadz-10.0-conll2010.txt.zip` here before building the Docker images.
