@@ -1,0 +1,23 @@
+--- ner/bin/make.deu	2003-03-26 02:52:03.000000000 +0100
++++ ner/bin/make.deu	2023-01-03 18:16:21.930883957 +0100
+@@ -5,9 +5,9 @@
+ #           http://www.ldc.upenn.edu/Catalog/CatalogEntry.jsp?catalogId=LDC94T5
+ # 20030326 erikt@uia.ua.ac.be
+ 
+-CORPUS="/mnt/cdrom/data/eci1/ger03/ger03b05.eci"
++CORPUS=${CORPUS:-"/mnt/cdrom/data/eci1/ger03/ger03b05.eci"}
+ 
+-if [ ! -f /mnt/cdrom/data/eci1/ger03/ger03b05.eci ]
++if [ ! -f $CORPUS ]
+ then
+    echo "cannot find ECI Multilingual Text cd" >&2
+    exit 1
+@@ -32,7 +32,7 @@
+ echo "tokenizing..."
+ head -82105 $CORPUS |\
+    ../bin/tokenize.deu |\
+-   grep -v "^ *$" |\
++   grep --text -v "^ *$" |\
+    sed 's/$/ /' |\
+    tr ' ' '\n' |\
+    ../bin/removeJunk |\
