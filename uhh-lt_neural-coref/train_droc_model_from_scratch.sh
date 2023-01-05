@@ -24,11 +24,18 @@ tuba10_custom = \${tuba10}{
   bert_pretrained_name_or_path = ${MODEL}
   long_doc_strategy = split
   log_root = ./output/
+  num_epochs = 1
 }
 EOT
 
 cp data/reference-coreference-scorers data/tuba10 -r
 
-# pre-train on TüBa-D/Z
-echo "performing pre-training on the TüBa-D/Z news dataset using ${MODEL}"
+# fine-tune on TüBa-D/Z
+echo "performing fine-tuning on the TüBa-D/Z news dataset using ${MODEL}"
 python3 run.py tuba10_custom 0
+
+#FINE_TUNED_MODEL=./output/tuba10/
+#
+## fine-tune on DROC, continuing on previous state
+#echo "performing c2f fine-tuning on the DROC dataset using ${FINE_TUNED_MODEL}"
+#python3 run.py droc_c2f 0 --model
