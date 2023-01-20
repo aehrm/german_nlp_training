@@ -33,11 +33,15 @@ COPY tuebadz10/ tuebadz10
 
 # make splits
 RUN mkdir data
-#RUN python3 split_droc.py --type-system-xml ./DROC-Release/droc/src/main/resources/CorefTypeSystem.xml ./DROC-Release/droc/DROC-xmi data/german.droc_gold_conll
-RUN unzip ./tuebadz10/tuebadz-10.0-conll2010.txt.zip -d ./tuebadz10
-RUN bash -c 'cd data/; python3 ../split_tuebadz_10.py  ../tuebadz10/tuebadz-10.0-conll2010.txt'
+RUN mkdir data/droc_full
+RUN python3 split_droc.py --type-system-xml ./DROC-Release/droc/src/main/resources/CorefTypeSystem.xml ./DROC-Release/droc/DROC-xmi data/droc_full/german.droc_gold_conll
+RUN unzip ./tuebadz10/tuebadz-10.0-conll2011.txt.zip -d ./tuebadz10
+RUN bash -c 'cd data/; python3 ../split_tuebadz_10.py  ../tuebadz10/tuebadz-10.0-conll2011.txt'
 RUN bash -c 'cd data/; wget "http://conll.cemantix.org/download/reference-coreference-scorers.v8.01.tar.gz"; tar xvf reference-coreference-scorers.v8.01.tar.gz'
 
 COPY train_droc_model_from_scratch.sh .
+
+RUN chmod a+rwx -R .
+
 CMD ["sh", "train_droc_model_from_scratch.sh"]
 

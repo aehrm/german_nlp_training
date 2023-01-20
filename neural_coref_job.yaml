@@ -1,0 +1,60 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: neuralcoref
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      priorityClassName: research-med
+      containers:
+        - name: mycontainer-extehrmanntraut
+          image: ls6-stud-registry.informatik.uni-wuerzburg.de/extehrmanntraut/german_nlp_training-uhhlt_neural_coref:latest
+          imagePullPolicy: "Always"
+          env:
+            - name: SEGMENT_LENGTH
+              value: "512"
+            - name: MODEL
+              value: "deepset/gbert-base"
+          resources:
+            limits:
+              nvidia.com/gpu: "1"
+              cpu: "1"
+              memory: "8Gi"
+            requests:
+              nvidia.com/gpu: "1"
+              cpu: "1"
+              memory: "8Gi"
+          #command: ["sh", "-c", "sh ./train_droc_model_from_scratch.sh"]
+          volumeMounts:
+            - mountPath: /.cache
+              name: cache
+            - mountPath: /output # directory IN the container
+              name: outputs # matches volume-name from below
+      #nodeSelector: 
+      #  gputype: rtx8000
+      #affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #          nodeSelectorTerms:
+      #            - matchExpressions:
+      #              - key: gputype
+      #                operator: In
+      #                values:
+      #                - rtx8000
+      imagePullSecrets:
+        - name: lsx-registry
+      restartPolicy: "Never"
+      volumes:
+        - name: outputs
+          cephfs:
+            monitors:
+              - 132.187.14.16,132.187.14.17,132.187.14.19,132.187.14.20  # Not important for you, just copy along
+            user: extehrmanntraut  # <namespace>
+            path: "/home/ext/ehrmanntraut/german_nlp_training/outputs/uhh_lt-neural_coref" # The path you want to mount
+            secretRef: # The name of the secret for auth. Is always "ceph-secret"
+              name: ceph-secret
+        - name: cache
+          emptyDir:
+            sizeLimit: 4Gi
+
