@@ -21,14 +21,10 @@ import numpy as np
 
 
 class RWTagger:
-    def __init__(self, use_gpu, log_level):
+    def __init__(self, device):
         self.logger = logging.getLogger(__name__)
-        self.logger.setLevel(log_level)
-
-        if use_gpu:
-            flair.device = torch.device('cuda:0')  # or 'cuda:1' etc. depending on your setup...
-        else:
-            flair.data = torch.device('cpu')
+        self.logger.setLevel(logging.INFO)
+        flair.device = torch.device(device)  # or 'cuda:1' etc. depending on your setup...
 
 
     def _get_embeddings(self, embtype="bert"):
@@ -47,6 +43,10 @@ class RWTagger:
             # BERT embeddings
             _emb_name = "BERT"
             _embeddings = BertEmbeddings('bert-base-multilingual-cased')
+        elif embtype.startswith("bert:"):
+            # BERT embeddings
+            _emb_name = "BERT"
+            _embeddings = BertEmbeddings(embtype[5:])
 
         elif embtype == "fasttext":
             # fasttext out of the box
