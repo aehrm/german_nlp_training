@@ -9,7 +9,7 @@ spec:
       priorityClassName: research-med
       containers:
         - name: mycontainer-extehrmanntraut
-          image: ls6-stud-registry.informatik.uni-wuerzburg.de/extehrmanntraut/german_nlp_training-uhhlt_event_classification:latest
+          image: ls6-stud-registry.informatik.uni-wuerzburg.de/extehrmanntraut/german_nlp_training/uhh-lt_event_classification:latest
           imagePullPolicy: "Always"
           env:
             - name: MODEL
@@ -24,8 +24,6 @@ spec:
               cpu: "2"
               memory: "8Gi"
           volumeMounts:
-            - mountPath: /.cache
-              name: cache
             - mountPath: /outputs # directory IN the container
               name: outputs # matches volume-name from below
       nodeName: gwerlum 
@@ -50,7 +48,4 @@ spec:
             path: "/home/ext/ehrmanntraut/german_nlp_training/outputs/uhh-lt_event-classification/" # The path you want to mount
             secretRef: # The name of the secret for auth. Is always "ceph-secret"
               name: ceph-secret
-        - name: cache
-          emptyDir:
-            sizeLimit: 4Gi
 

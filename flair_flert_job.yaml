@@ -1,19 +1,17 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: neuralcoref
+  name: flairflert
 spec:
   backoffLimit: 0
   template:
     spec:
-      priorityClassName: research-med
+      priorityClassName: research-low
       containers:
         - name: mycontainer-extehrmanntraut
-          image: ls6-stud-registry.informatik.uni-wuerzburg.de/extehrmanntraut/german_nlp_training/uhh-lt_neural-coref:latest
+          image: ls6-stud-registry.informatik.uni-wuerzburg.de/extehrmanntraut/german_nlp_training/flair_flert:latest
           imagePullPolicy: "Always"
           env:
-            - name: SEGMENT_LENGTH
-              value: "512"
             - name: MODEL
               value: "deepset/gbert-large"
           resources:
@@ -28,16 +26,8 @@ spec:
           volumeMounts:
             - mountPath: /output # directory IN the container
               name: outputs # matches volume-name from below
-      nodeName: vana
-      #affinity:
-      #   nodeAffinity:
-      #     requiredDuringSchedulingIgnoredDuringExecution:
-      #          nodeSelectorTerms:
-      #            - matchExpressions:
-      #              - key: gputype
-      #                operator: In
-      #                values:
-      #                - rtx8000
+      nodeSelector:
+        gputype: "a100"
       imagePullSecrets:
         - name: lsx-registry
       restartPolicy: "Never"
@@ -47,6 +37,7 @@ spec:
             monitors:
               - 132.187.14.16,132.187.14.17,132.187.14.19,132.187.14.20  # Not important for you, just copy along
             user: extehrmanntraut  # <namespace>
-            path: "/home/ext/ehrmanntraut/german_nlp_training/outputs/uhh-lt_neural-coref" # The path you want to mount
+            path: "/home/ext/ehrmanntraut/german_nlp_training/outputs/flair_flert" # The path you want to mount
             secretRef: # The name of the secret for auth. Is always "ceph-secret"
               name: ceph-secret
+

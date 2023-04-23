@@ -28,13 +28,19 @@ tuba10_custom = \${tuba10}{
   max_segment_len = ${SEGMENT_LENGTH}
   long_doc_strategy = split
   log_root = /output/$TIMESTAMP/
+  use_features = true
+  use_segment_distance = false
+  num_epochs = 10
 }
 
-droc_c2f_custom = \${droc_c2f}{
+droc_incremental_no_segment_distance_custom = \${droc_incremental_no_segment_distance}{
   bert_tokenizer_name = ${MODEL}
   bert_pretrained_name_or_path = ${MODEL}
   max_segment_len = ${SEGMENT_LENGTH}
   log_root = /output/$TIMESTAMP/
+  use_features = true
+  use_segment_distance = false
+  num_epochs = 10
 }
 EOT
 
@@ -48,4 +54,4 @@ FINE_TUNED_MODEL=$(ls /output/$TIMESTAMP/tuba10_custom/model_*.bin)
 
 # fine-tune on DROC, continuing on previous state
 echo "performing c2f fine-tuning on the DROC dataset using ${FINE_TUNED_MODEL}"
-python3 run.py droc_c2f_custom 0 --model $FINE_TUNED_MODEL
+python3 run.py droc_incremental_no_segment_distance_custom 0 --model ${FINE_TUNED_MODEL}

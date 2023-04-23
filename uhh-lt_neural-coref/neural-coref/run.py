@@ -370,10 +370,13 @@ class Runner:
         torch.save(model.state_dict(), path_ckpt)
         logger.info('Saved model to %s' % path_ckpt)
 
-    def load_model_checkpoint(self, model, suffix, dir=None):
-        if dir is None:
-            dir = self.config['log_dir']
-        path_ckpt = join(dir, f'model_{suffix}.bin')
+    def load_model_checkpoint(self, model, suffix_or_path, dir=None, is_path=False):
+        if not is_path:
+            if dir is None:
+                dir = self.config['log_dir']
+            path_ckpt = join(dir, f'model_{suffix_or_path}.bin')
+        else:
+            path_ckpt = suffix_or_path
         model.load_state_dict(torch.load(path_ckpt, map_location=torch.device('cpu')), strict=False)
         logger.info('Loaded model from %s' % path_ckpt)
 
@@ -399,7 +402,7 @@ if __name__ == '__main__':
     runner = Runner(args.config, args.gpu)
     model = runner.initialize_model()
     if args.model:
-        runner.load_model_checkpoint(model, args.model)
+        runner.load_model_checkpoint(model, args.model, is_path=True)
     if args.mention_pre_training:
         from run_mentions import run_mentions
         logger.info('Performing mention pre-training')
