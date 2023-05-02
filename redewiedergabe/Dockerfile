@@ -33,12 +33,12 @@ USER ${USER}
 #RUN wget 'https://github.com/redewiedergabe/corpus/blob/master/data/additional/data_konvens-paper-2020.zip' -O data.zip
 #RUN unzip data.zip
 
+
+COPY data_konvens-paper-2020 data_konvens-paper-2020
+COPY tagger tagger
 RUN pip3 install -r tagger/requirements.txt
 
-COPY data_konvens-paper-2020
-COPY tagger tagger
 COPY train_model.py train_model.py
-RUN mkdir train_output
 USER root
 RUN chown -R ${USER}:${USER} data_konvens-paper-2020 tagger train_model.py
 USER ${USER}
