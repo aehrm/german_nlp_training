@@ -270,7 +270,7 @@ class RWTagger:
 
         return corpus
 
-    def train(self, trainfile, devfile, testfile, resfolder, embtype="bert", chunk_len=100, batch_len=8):
+    def train(self, trainfile, devfile, testfile, resfolder, embtype="bert", chunk_len=100, batch_len=8, mini_batch_chunk_size=None):
         """
         *** This method can be used to train new models with the settings used in project Redewiedergabe
         It is not accessible from rwtagger_script and not documented in detail. Use at your own risk. ;-)
@@ -304,6 +304,7 @@ class RWTagger:
         trainer.train(resfolder,
                       learning_rate=0.1,
                       mini_batch_size=batch_len,
+                      mini_batch_chunk_size=mini_batch_chunk_size,
                       max_epochs=150,
                       checkpoint=True)
         # plot training curves

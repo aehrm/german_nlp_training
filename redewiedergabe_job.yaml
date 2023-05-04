@@ -13,7 +13,9 @@ spec:
           imagePullPolicy: "Always"
           env:
             - name: MODEL
-              value: "deepset/gbert-base"
+              value: "/model_store/gbert_large_literary"
+            - name: SEGMENT_LENGTH
+              value: "300"
           resources:
             limits:
               nvidia.com/gpu: "1"
@@ -26,6 +28,8 @@ spec:
           volumeMounts:
             - mountPath: /outputs # directory IN the container
               name: outputs # matches volume-name from below
+            - mountPath: /model_store # directory IN the container
+              name: model_store # matches volume-name from below
       nodeName: gwerlum 
       #affinity:
       #   nodeAffinity:
@@ -46,6 +50,14 @@ spec:
               - 132.187.14.16,132.187.14.17,132.187.14.19,132.187.14.20  # Not important for you, just copy along
             user: extehrmanntraut  # <namespace>
             path: "/home/ext/ehrmanntraut/german_nlp_training/outputs/redewiedergabe/" # The path you want to mount
+            secretRef: # The name of the secret for auth. Is always "ceph-secret"
+              name: ceph-secret
+        - name: model_store
+          cephfs:
+            monitors:
+              - 132.187.14.16,132.187.14.17,132.187.14.19,132.187.14.20  # Not important for you, just copy along
+            user: extehrmanntraut  # <namespace>
+            path: "/home/ext/ehrmanntraut/german_nlp_training/model_store/" # The path you want to mount
             secretRef: # The name of the secret for auth. Is always "ceph-secret"
               name: ceph-secret
 
