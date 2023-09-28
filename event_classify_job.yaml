@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: eventclassify
+  name: germannlptraining-eventclassify
 spec:
   backoffLimit: 0
   template:

@@ -35,11 +35,11 @@ USER ${USER}
 
 
 COPY data_konvens-paper-2020 data_konvens-paper-2020
-COPY tagger tagger
+COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
 COPY train_model.py train_model.py
 USER root
-RUN chown -R ${USER}:${USER} data_konvens-paper-2020 tagger train_model.py
+RUN chown -R ${USER}:${USER} data_konvens-paper-2020 train_model.py
 USER ${USER}
 CMD ["python3", "train_model.py"]

@@ -6,6 +6,7 @@ import flair
 import torch
 import logging
 import os
+from datetime import datetime
 
 from flair.data import Sentence, Token, Corpus
 from flair.trainers import ModelTrainer
@@ -50,6 +51,7 @@ corpus = Corpus(train_data, dev_data, test_data)
 tag_dictionary = corpus.make_label_dictionary(label_type="cat")
 logger.info('done reading corpus')
 
+timestamp = datetime.now().isoformat(timespec='seconds')
 for kind in ['direct', 'indirect', 'freeIndirect', 'reported']: 
     embeddings = TransformerWordEmbeddings(
             os.getenv('MODEL'), # which transformer model
