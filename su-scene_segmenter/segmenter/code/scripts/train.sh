@@ -6,6 +6,7 @@ export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 
 # path to bert type and path
 #export BERT_MODEL=deepset/gbert-large #bert-base-german-cased
+export BERT_MODEL=$MODEL
 export TOKEN=[SEP]
 export MODEL_TYPE=bert
 
@@ -14,9 +15,9 @@ export MODEL_TYPE=bert
 # export MODEL_TYPE=roberta
 
 # path to dataset files
-export TRAIN_PATH=../stss_dataset/train.jsonl
-export DEV_PATH=../stss_dataset/dev.jsonl
-export TEST_PATH=../stss_dataset/test.jsonl
+export TRAIN_PATH=../data/ss/train.jsonl
+export DEV_PATH=../data/ss/dev.jsonl
+export TEST_PATH=../data/ss/test.jsonl
 
 # model
 export USE_SEP=true  # true for our model. false for baseline
@@ -39,10 +40,10 @@ export SCI_SUM_FAKE_SCORES=false  # use fake scores for testing
 
 CONFIG_FILE=sequential_sentence_classification/config.jsonnet
 
-#sent_count=$1
-#length=$2
+sent_count=25
+length=100
 #out_folder="33stss_${sent_count}_${length}"
 #rm -rf "${out_folder}"
-#export MAX_SENT_PER_EXAMPLE=${sent_count}
-#export SENT_MAX_LEN=${length}
-python3 -m allennlp train $CONFIG_FILE --include-package sequential_sentence_classification -s /output
+export MAX_SENT_PER_EXAMPLE=${sent_count}
+export SENT_MAX_LEN=${length}
+python3 -m allennlp train $CONFIG_FILE --include-package sequential_sentence_classification -s ./output
